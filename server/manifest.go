@@ -12,10 +12,10 @@ var manifest *model.Manifest
 
 const manifestStr = `
 {
-  "id": "com.mattermost.plugin-starter-template",
-  "name": "Plugin Starter Template",
-  "description": "This plugin serves as a starting point for writing a Mattermost plugin.",
-  "version": "0.1.0",
+  "id": "com.equinux.mattermost-plugin-video-reencode",
+  "name": "Video Re-Encode Plugin",
+  "description": "Automatically re-encodes video uploads to be compatible with most clients.",
+  "version": "0.1.3",
   "min_server_version": "5.12.0",
   "server": {
     "executables": {
@@ -25,13 +25,19 @@ const manifestStr = `
     },
     "executable": ""
   },
-  "webapp": {
-    "bundle_path": "webapp/dist/main.js"
-  },
   "settings_schema": {
     "header": "",
     "footer": "",
-    "settings": []
+    "settings": [
+      {
+        "key": "CreatePreviewImage",
+        "display_name": "Create Preview Image",
+        "type": "bool",
+        "help_text": "Extract a preview image from the video.",
+        "placeholder": "",
+        "default": false
+      }
+    ]
   }
 }
 `
