@@ -31,9 +31,17 @@ const manifestStr = `
     "settings": [
       {
         "key": "CreatePreviewImage",
-        "display_name": "Create Preview Image",
+        "display_name": "Create Preview GIF",
         "type": "bool",
-        "help_text": "Extract a preview image from the video.",
+        "help_text": "Extract a preview GIF from a video file attached to a message.",
+        "placeholder": "",
+        "default": false
+      },
+      {
+        "key": "ConvertMOVToMP4",
+        "display_name": "Convert mov to mp4",
+        "type": "bool",
+        "help_text": "Converts mov file uploads to mp4.",
         "placeholder": "",
         "default": false
       }
