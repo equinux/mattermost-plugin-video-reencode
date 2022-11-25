@@ -7,5 +7,6 @@ require (
 	github.com/mattermost/mattermost-server/v5 v5.3.2-0.20200924100636-e726b0426826
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.6.1
+	golang.org/x/sys v0.2.0 // indirect
 	sigs.k8s.io/yaml v1.2.0
 )

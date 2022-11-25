@@ -15,7 +15,7 @@ const manifestStr = `
   "id": "com.equinux.mattermost-plugin-video-reencode",
   "name": "Video Re-Encode Plugin",
   "description": "Automatically re-encodes video uploads to be compatible with most clients.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "min_server_version": "5.12.0",
   "server": {
     "executables": {
@@ -44,6 +44,14 @@ const manifestStr = `
         "help_text": "Converts mov file uploads to mp4.",
         "placeholder": "",
         "default": false
+      },
+      {
+        "key": "ConversionFileSizeLimit",
+        "display_name": "File size limit for mp4 conversion",
+        "type": "number",
+        "help_text": "Files larger then this in Kilobyte (KB) will not be converted.",
+        "placeholder": "",
+        "default": 20480
       }
     ]
   }

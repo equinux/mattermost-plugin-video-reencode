@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin/plugintest"
+	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -26,6 +26,25 @@ func TestFileWillBeUploaded(t *testing.T) {
 	assert.Empty(t, str)
 	require.NotNil(t, info)
 	assert.Equal(t, info.Extension, "mp4")
+}
+
+func TestFileSizeLimit(t *testing.T) {
+	p := setupPlugin()
+	p.configuration = &configuration{
+		ConvertMOVToMP4:         true,
+		ConversionFileSizeLimit: 1,
+	}
+	fileInfo := model.FileInfo{
+		Extension: "mov",
+		Name:      "test_assets/clip.mov",
+	}
+	file, err := os.Open(fileInfo.Name)
+	require.NoError(t, err)
+	var output bytes.Buffer
+	info, str := p.FileWillBeUploaded(nil, &fileInfo, file, &output)
+	assert.Empty(t, str)
+	require.NotNil(t, info)
+	assert.Equal(t, info.Extension, "mov")
 }
 
 func setupPlugin() *Plugin {

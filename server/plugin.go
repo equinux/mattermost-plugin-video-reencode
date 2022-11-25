@@ -10,20 +10,20 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/plugin"
 )
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
 
+	// configuration is the active plugin configuration. Consult getConfiguration and
+	// setConfiguration for usage.
+	configuration *configuration
+
 	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex
-
-	// configuration is the active plugin configuration. Consult getConfiguration
-	// and setConfiguration for usage.
-	configuration *configuration
 }
 
 // FileWillBeUploaded converts any attached "mov" video file to "mp4" using
@@ -50,6 +50,14 @@ func (p *Plugin) FileWillBeUploaded(_ *plugin.Context,
 			errMsg := "failed to read video: " + err.Error()
 			p.API.LogWarn(errMsg)
 			return nil, errMsg
+		}
+
+		fileSizeLimit := configuration.ConversionFileSizeLimit * 1024
+		if fileSizeLimit != 0 && len(data) > fileSizeLimit {
+			errMsg := fmt.Sprintf("File size %d exceeds limit %d, skipping...",
+				len(data), fileSizeLimit)
+			p.API.LogInfo(errMsg)
+			return info, ""
 		}
 
 		tmpfile, err := ioutil.TempFile("", filepath.Base(info.Name)+".*.mov")
@@ -160,10 +168,10 @@ func (p *Plugin) MessageHasBeenPosted(c *plugin.Context, post *model.Post) {
 	}
 
 	newPost := &model.Post{
-		RootId:    post.Id,
-		ParentId:  post.Id,
-		ChannelId: post.ChannelId,
-		UserId:    post.UserId,
+		RootId:     post.Id,
+		OriginalId: post.Id,
+		ChannelId:  post.ChannelId,
+		UserId:     post.UserId,
 	}
 	newPost.FileIds = fileIds
 
